@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Validação de Código</title>
+  <style>
+    body {
+      background-color: #000;
+      color: red;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 60px 20px;
+      cursor: none;
+      overflow: hidden;
+    }
+    .box {
+      border: 2px solid red;
+      padding: 20px;
+      margin-top: 50px;
+      display: inline-block;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px red; }
+      50% { box-shadow: 0 0 20px red; }
+      100% { box-shadow: 0 0 10px red; }
+    }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: red;
+      font-size: 20px;
+      font-family: 'Courier New', Courier, monospace;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <button id="fs-trigger" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: transparent;
+    border: none;
+    z-index: 10000;
+    cursor: none;
+  "></button>
+  <div id="overlay">
+    <p>⏳ Analisando dispositivo... Aguarde.</p>
+    <p>Verificando integridade do sistema.</p>
+  </div>
+
+  <h1>🚨 VOCÊ FOI IDENTIFICADO 🚨</h1>
+  <div class="box">
+    <p>Seu endereço IP foi registrado.</p>
+    <p>Seu dispositivo foi identificado.</p>
+    <p>
+      Todas as atividades estão <strong>sendo monitoradas em tempo real</strong><br>
+      pelos sistemas da <strong>Coordenação de Repressão a Crimes Cibernéticos (Cibercrime)</strong>.
+    </p>
+    <p>📍 Localização: <span id="location">Carregando...</span></p>
+    <p>🕵️ A tentativa de fraude foi detectada.</p>
+    <p><strong>Seus dados estão sob análise. Interrompa suas ações imediatamente.</strong></p>
+  </div>
+
+  <script>
+   const fsTrigger = document.getElementById("fs-trigger");
+    fsTrigger.addEventListener("click", () => {
+      fsTrigger.remove(); // Remove botão após ativar
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    });
+    // Simulação de bloqueio temporário
+    document.body.style.pointerEvents = "none";
+    setTimeout(() => {
+      document.getElementById("overlay").style.display = "none";
+      document.body.style.pointerEvents = "auto";
+    }, 3000); // bloqueia interação por 15 segundos
+
+    // Geolocalização IP
+    fetch("https://ipinfo.io/json?token=dfa0e8b55315a1")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("location").innerText = `${data.city}, ${data.region} - ${data.country}`;
+      });
+  </script>
+</body>
+</html>
